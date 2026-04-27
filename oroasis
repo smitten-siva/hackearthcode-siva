@@ -1,0 +1,59 @@
+import sys
+
+def solve():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    ptr = 0
+    t = int(input_data[ptr])
+    ptr += 1
+    
+    for _ in range(t):
+        n = int(input_data[ptr])
+        ptr += 1
+        a = list(map(int, input_data[ptr : ptr + n]))
+        ptr += n
+        
+        total_or = 0
+        for x in a:
+            total_or |= x
+            
+        pref = [0] * (n + 1)
+        suff = [0] * (n + 1)
+        for i in range(n):
+            pref[i+1] = pref[i] | a[i]
+        for i in range(n-1, -1, -1):
+            suff[i] = suff[i+1] | a[i]
+            
+        min_len = n + 1
+        count = 0
+        
+        last_pos = [-1] * 31
+        for r in range(n):
+            for bit in range(31):
+                if (a[r] >> bit) & 1:
+                    last_pos[bit] = r
+            
+            sorted_pos = sorted([p for p in last_pos if p != -1], reverse=True)
+            
+            cur_or = 0
+            for l in sorted_pos:
+                cur_or |= a[l]
+                outside_or = pref[l] | suff[r+1]
+                
+                if cur_or == outside_or:
+                    length = r - l + 1
+                    if length < min_len:
+                        min_len = length
+                        count = 1
+                    elif length == min_len:
+                        count += 1
+                    break
+        
+        if min_len > n:
+            sys.stdout.write("-1\n")
+        else:
+            sys.stdout.write(f"{min_len} {count}\n")
+
+if __name__ == "__main__":
+    solve()
