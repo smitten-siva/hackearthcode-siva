@@ -1,0 +1,44 @@
+import sys
+
+def solve():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    ptr = 0
+    t_cases = int(input_data[ptr])
+    ptr += 1
+    
+    for _ in range(t_cases):
+        n = int(input_data[ptr])
+        ptr += 1
+        a = list(map(int, input_data[ptr : ptr + n]))
+        ptr += n
+        
+        pref0 = [0] * (n + 1)
+        pref1 = [0] * (n + 1)
+        for i in range(n):
+            pref0[i+1] = pref0[i] + (1 if a[i] == 0 else 0)
+            pref1[i+1] = pref1[i] + (1 if a[i] == 1 else 0)
+            
+        q_count = int(input_data[ptr])
+        ptr += 1
+        
+        results = []
+        for _ in range(q_count):
+            l, r = int(input_data[ptr]), int(input_data[ptr+1])
+            ptr += 2
+            
+            k = r - l + 1
+            total_pairs = k * (k - 1) // 2
+            
+            c0 = pref0[r] - pref0[l-1]
+            c1 = pref1[r] - pref1[l-1]
+            
+            invalid = (c0 * (c0 - 1) // 2) + (c0 * c1)
+            results.append(str(total_pairs - invalid))
+            
+        sys.stdout.write("\n".join(results) + "\n")
+
+if __name__ == "__main__":
+    solve()
