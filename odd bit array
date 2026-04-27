@@ -1,0 +1,33 @@
+import sys
+
+def solve():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    ptr = 0
+    t = int(input_data[ptr])
+    ptr += 1
+    
+    MOD = 10**9 + 7
+    
+    for _ in range(t):
+        n = int(input_data[ptr])
+        ptr += 1
+        arr = list(map(int, input_data[ptr : ptr + n]))
+        ptr += n
+        
+        counts = [1, 0]
+        cur_xor = 0
+        cur_dp = 0
+        
+        for x in arr:
+            cur_xor ^= x
+            p = bin(cur_xor).count('1') % 2
+            cur_dp = counts[1 - p]
+            counts[p] = (counts[p] + cur_dp) % MOD
+            
+        print(cur_dp)
+
+if __name__ == "__main__":
+    solve()
