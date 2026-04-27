@@ -1,0 +1,36 @@
+def solve(N, A):
+    total_sum = sum(A)
+    
+    # Condition 1: Sum must be non-positive
+    if total_sum > 0:
+        return -1
+    
+    x = -total_sum
+    min_m_sum = 0
+    
+    for val in A:
+        if val > 0:
+            min_m_sum += val
+        elif val < 0 and val % 2 != 0:
+            # If negative and odd, minimum subtraction needed is 1
+            # to make the value even so it can be offset by +2s
+            min_m_sum += 1
+        # If val is negative/even or zero, min_m_sum doesn't need to increase
+            
+    # Condition 2: Operations count must cover min subtractions and match parity
+    if x >= min_m_sum and (x - min_m_sum) % 2 == 0:
+        return x
+    else:
+        return -1
+ 
+# Example usage for T test cases:
+import sys
+input = sys.stdin.read
+data = input().split()
+T = int(data[0])
+ptr = 1
+for _ in range(T):
+    N = int(data[ptr])
+    A = list(map(int, data[ptr+1:ptr+1+N]))
+    print(solve(N, A))
+    ptr += 1 + N
