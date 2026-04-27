@@ -1,0 +1,42 @@
+import sys
+
+def get_digit_sum(n):
+    s = 0
+    # Handle negative numbers if necessary, though nums[i] >= 0
+    n = abs(n)
+    while n > 0:
+        s += n % 10
+        n //= 10
+    return s
+
+def solve():
+    # Fast I/O for large constraints
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    N = int(input_data[0])
+    nums = input_data[1:]
+    
+    # Dictionary to store frequency of each digit sum
+    sum_counts = {}
+    
+    for num_str in nums:
+        # Calculate sum of digits directly from string for speed
+        d_sum = sum(int(digit) for digit in num_str)
+        
+        if d_sum in sum_counts:
+            sum_counts[d_sum] += 1
+        else:
+            sum_counts[d_sum] = 1
+            
+    total_pairs = 0
+    for count in sum_counts.values():
+        if count >= 2:
+            # Add combinations: nC2 = n * (n-1) / 2
+            total_pairs += (count * (count - 1)) // 2
+            
+    print(total_pairs)
+
+if __name__ == "__main__":
+    solve()
